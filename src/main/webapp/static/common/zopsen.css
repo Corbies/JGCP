@@ -1,0 +1,40 @@
+#searchForm .form-group {
+    margin: 2px 5px 2px 1px;
+}
+
+.contentTable thead {
+    background-color: #DDDDDD;
+}
+
+.contentTable>tbody>tr>td{
+    vertical-align: middle;
+}
+
+.pagination {
+    margin: 8px 0;
+}
+
+.pagination .controls a {
+    /*border: 0;*/
+}
+
+.pagination .controls input {
+    border: 0;
+    border-bottom: 1px solid #888888;
+    color: #999;
+    width: 30px;
+    padding: 0;
+    /*margin: -1px 0 0 0;*/
+    text-align: center;
+}
+
+.form-body>.form-group{
+    width: 98%;
+    border-bottom: 1px solid #DDDDDD;
+    padding: 10px;
+    margin-bottom: 0;
+    margin-left: 10px;
+}
+.form-body .treeselectTag{
+    margin: 0;
+}

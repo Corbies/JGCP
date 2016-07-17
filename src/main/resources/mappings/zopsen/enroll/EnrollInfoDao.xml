@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zopsen.enroll.dao.EnrollInfoDao">
+    
+	<sql id="enrollInfoColumns">
+		a.id AS "id",
+		a.xingming AS "xingming",
+		a.zhunkaozhenghao AS "zhunkaozhenghao",
+		a.zhongkaochengji AS "zhongkaochengji",
+		a.shifoushengneikaosheng AS "shifoushengneikaosheng",
+		a.shenfenzhenghao AS "shenfenzhenghao",
+		a.hujisuozaidi AS "hujisuozaidi",
+		a.hujileibie AS "hujileibie",
+		a.jiachanglianxidianhua AS "jiachanglianxidianhua",
+		a.chuzhongbiyexuexiao AS "chuzhongbiyexuexiao",
+		a.baokaozhuanye1 AS "baokaozhuanye1",
+		a.baokaozhuanye2 AS "baokaozhuanye2",
+		a.mianshijieguo AS "mianshijieguo",
+		a.zhaopian AS "zhaopian",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="enrollInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="EnrollInfo">
+		SELECT 
+			<include refid="enrollInfoColumns"/>
+		FROM enroll_info a
+		<include refid="enrollInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="EnrollInfo">
+		SELECT 
+			<include refid="enrollInfoColumns"/>
+		FROM enroll_info a
+		<include refid="enrollInfoJoins"/>
+		<where>
+			
+			<if test="xingming != null and xingming != ''">
+				AND a.xingming LIKE 
+					<if test="dbName == 'oracle'">'%'||#{xingming}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{xingming}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{xingming},'%')</if>
+			</if>
+			<if test="zhunkaozhenghao != null and zhunkaozhenghao != ''">
+				AND a.zhunkaozhenghao LIKE 
+					<if test="dbName == 'oracle'">'%'||#{zhunkaozhenghao}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{zhunkaozhenghao}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{zhunkaozhenghao},'%')</if>
+			</if>
+			<if test="zhongkaochengji != null and zhongkaochengji != ''">
+				AND a.zhongkaochengji LIKE 
+					<if test="dbName == 'oracle'">'%'||#{zhongkaochengji}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{zhongkaochengji}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{zhongkaochengji},'%')</if>
+			</if>
+			<if test="shifoushengneikaosheng != null and shifoushengneikaosheng != ''">
+				AND a.shifoushengneikaosheng LIKE 
+					<if test="dbName == 'oracle'">'%'||#{shifoushengneikaosheng}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{shifoushengneikaosheng}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{shifoushengneikaosheng},'%')</if>
+			</if>
+			<if test="shenfenzhenghao != null and shenfenzhenghao != ''">
+				AND a.shenfenzhenghao LIKE 
+					<if test="dbName == 'oracle'">'%'||#{shenfenzhenghao}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{shenfenzhenghao}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{shenfenzhenghao},'%')</if>
+			</if>
+			<if test="hujisuozaidi != null and hujisuozaidi != ''">
+				AND a.hujisuozaidi LIKE 
+					<if test="dbName == 'oracle'">'%'||#{hujisuozaidi}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{hujisuozaidi}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{hujisuozaidi},'%')</if>
+			</if>
+			<if test="hujileibie != null and hujileibie != ''">
+				AND a.hujileibie = #{hujileibie}
+			</if>
+			<if test="jiachanglianxidianhua != null and jiachanglianxidianhua != ''">
+				AND a.jiachanglianxidianhua = #{jiachanglianxidianhua}
+			</if>
+			<if test="chuzhongbiyexuexiao != null and chuzhongbiyexuexiao != ''">
+				AND a.chuzhongbiyexuexiao = #{chuzhongbiyexuexiao}
+			</if>
+			<if test="baokaozhuanye1 != null and baokaozhuanye1 != ''">
+				AND a.baokaozhuanye1 = #{baokaozhuanye1}
+			</if>
+			<if test="baokaozhuanye2 != null and baokaozhuanye2 != ''">
+				AND a.baokaozhuanye2 = #{baokaozhuanye2}
+			</if>
+			<if test="mianshijieguo != null and mianshijieguo != ''">
+				AND a.mianshijieguo = #{mianshijieguo}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="EnrollInfo">
+		SELECT 
+			<include refid="enrollInfoColumns"/>
+		FROM enroll_info a
+		<include refid="enrollInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO enroll_info(
+			id,
+			xingming,
+			zhunkaozhenghao,
+			zhongkaochengji,
+			shifoushengneikaosheng,
+			shenfenzhenghao,
+			hujisuozaidi,
+			hujileibie,
+			jiachanglianxidianhua,
+			chuzhongbiyexuexiao,
+			baokaozhuanye1,
+			baokaozhuanye2,
+			mianshijieguo,
+			zhaopian,
+			remarks
+		) VALUES (
+			#{id},
+			#{xingming},
+			#{zhunkaozhenghao},
+			#{zhongkaochengji},
+			#{shifoushengneikaosheng},
+			#{shenfenzhenghao},
+			#{hujisuozaidi},
+			#{hujileibie},
+			#{jiachanglianxidianhua},
+			#{chuzhongbiyexuexiao},
+			#{baokaozhuanye1},
+			#{baokaozhuanye2},
+			#{mianshijieguo},
+			#{zhaopian},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE enroll_info SET 	
+			xingming = #{xingming},
+			zhunkaozhenghao = #{zhunkaozhenghao},
+			zhongkaochengji = #{zhongkaochengji},
+			shifoushengneikaosheng = #{shifoushengneikaosheng},
+			shenfenzhenghao = #{shenfenzhenghao},
+			hujisuozaidi = #{hujisuozaidi},
+			hujileibie = #{hujileibie},
+			jiachanglianxidianhua = #{jiachanglianxidianhua},
+			chuzhongbiyexuexiao = #{chuzhongbiyexuexiao},
+			baokaozhuanye1 = #{baokaozhuanye1},
+			baokaozhuanye2 = #{baokaozhuanye2},
+			mianshijieguo = #{mianshijieguo},
+			zhaopian = #{zhaopian},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM enroll_info
+		WHERE id = #{id}
+	</update>
+
+	<select id="findByMianshijieguo" resultType="EnrollInfo">
+		SELECT
+		<include refid="enrollInfoColumns"/>
+		FROM enroll_info a
+		<include refid="enrollInfoJoins"/>
+		<where>
+
+
+			<if test="mianshijieguo != null and mianshijieguo != ''">
+				AND a.mianshijieguo = #{mianshijieguo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+
+	</select>
+	
+</mapper>

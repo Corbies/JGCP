@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zopsen.wordbook.dao.WordBookDao">
+    <!--T get(String key);-->
+    <!--List<T> getlist(String key);-->
+    <resultMap id="wordBook" type="WordBook">
+        <result column="key_" property="WordBook_KEY"></result>
+        <result column="value_" property="WordBook_VALUE"></result>
+    </resultMap>
+
+
+    <select id="get"  parameterType="java.lang.String"  resultMap="wordBook">
+--         SELECT  a.key_ AS  WordBook_KEY , a.value_ AS WordBook_VALUE
+           SELECT  key_ AS , value_
+        FROM  wordbook
+        WHERE key_=#{key}
+
+    </select>
+
+    <select id="getlist" parameterType="java.lang.String"  resultMap="wordBook">
+--         SELECT  a.key_ AS  WordBook_KEY , a.value_ AS WordBook_VALUE
+           SELECT  key_  , value_
+        FROM  wordbook
+        WHERE key_=#{key}
+    </select>
+
+</mapper>

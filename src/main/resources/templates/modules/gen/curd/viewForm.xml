@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<name>viewForm</name>
+	<filePath>src/main/webapp/WEB-INF/views/${lastPackageName}/${moduleName}/${subModuleName}</filePath>
+	<fileName>${className}Form.jsp</fileName>
+	<content><![CDATA[
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+    <title>${functionNameSimple}管理</title>
+    <meta name="decorator" content="metronic"/>
+</head>
+<body>
+<div class="tabbable-custom ">
+    <ul class="nav nav-tabs">
+		<li><a href="${r"${ctx}"}/${urlPrefix}/">${functionNameSimple}列表</a></li>
+		<li class="active"><a href="${r"${ctx}"}/${urlPrefix}/form?id=${"${"+className+".id}"}">${functionNameSimple}<shiro:hasPermission name="${permissionPrefix}:edit">${r"${not empty "+className+".id?'修改':'添加'}"}</shiro:hasPermission><shiro:lacksPermission name="${permissionPrefix}:edit">查看</shiro:lacksPermission></a></li>
+	</ul>
+	<div class="tab-content">
+		<form:form id="inputForm" modelAttribute="${className}" action="${r"${ctx}"}/${urlPrefix}/save" method="post" class="form-horizontal">
+			<div class="form-body">
+                <div class="alert alert-danger display-hide">
+                    <button class="close" data-close="alert"></button>
+                    表单内容没有填写完整，请检查。
+                </div>
+                <div class="alert alert-success display-hide">
+                    <button class="close" data-close="alert"></button>
+                    表单验证通过。
+                </div>
+				<form:hidden path="id"/>
+				<sys:message content="${r"${message}"}"/>
+				<#list table.columnList as c>
+					<#if c.isEdit?? && c.isEdit == "1" && (c.isNotBaseField || c.simpleJavaField == 'remarks')>
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="${c.javaFieldId}">${c.comments} <#if c.isNull != "1"><span class="required"> * </span></#if></label>
+					<div class="col-sm-6">
+					<#if c.showType == "input">
+						<form:input path="${c.javaFieldId}" htmlEscape="false"<#if c.dataLength != "0"> maxlength="${c.dataLength}"</#if> class="form-control <#if c.isNull != "1">required</#if><#if c.javaType == "Long" || c.javaType == "Integer"> digits</#if><#if c.javaType == "Double"> number</#if>"/>
+					<#elseif c.showType == "textarea">
+						<form:textarea path="${c.javaFieldId}" htmlEscape="false" rows="4"<#if c.dataLength != "0"> maxlength="${c.dataLength}"</#if> class="form-control <#if c.isNull != "1">required</#if>"/>
+					<#elseif c.showType == "select">
+						<form:select path="${c.javaFieldId}" class="input-xlarge <#if c.isNull != "1">required</#if>">
+							<form:option value="" label=""/>
+							<form:options items="${"$"}{fns:getDictList('${c.dictType}')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+						</form:select>
+					<#elseif c.showType == "checkbox">
+						<c:forEach var="cboxitem_${c.javaFieldId}" items="${"$"}{fns:getDictList('${c.dictType}')}" varStatus="status">
+                            <form:checkbox path="${c.javaFieldId}" value="${"$"}{cboxitem_${c.javaFieldId}.id}" label="${"$"}{cboxitem_${c.javaFieldId}.name}"
+                                           htmlEscape="false"/>&nbsp;
+                            <c:if test="${"$"}{((status.index+1) % 3) eq 0}"><br/></c:if>
+                        </c:forEach>
+						<!--<form:checkboxes path="${c.javaFieldId}" items="${"$"}{fns:getDictList('${c.dictType}')}" itemLabel="label" itemValue="value" htmlEscape="false" class="<#if c.isNull != "1">required</#if>"/>-->
+					<#elseif c.showType == "radiobox">
+						<form:radiobuttons path="${c.javaFieldId}" items="${"$"}{fns:getDictList('${c.dictType}')}" itemLabel="label" itemValue="value" htmlEscape="false" class="<#if c.isNull != "1">required</#if>"/>
+					<#elseif c.showType == "dateselect">
+						<input name="${c.javaFieldId}" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate <#if c.isNull != "1">required</#if>"
+							value="<fmt:formatDate value="${"$"}{${className}.${c.javaFieldId}}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+							onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+					<#elseif c.showType == "userselect">
+						<sys:treeselect id="${c.simpleJavaField}" name="${c.javaFieldId}" value="${"$"}{${className}.${c.javaFieldId}}" labelName="${c.javaFieldName}" labelValue="${"$"}{${className}.${c.javaFieldName}}"
+							title="用户" url="/sys/office/treeData?type=3" cssClass="<#if c.isNull != "1">required</#if>" allowClear="true" notAllowSelectParent="true"/>
+					<#elseif c.showType == "officeselect">
+						<sys:treeselect id="${c.simpleJavaField}" name="${c.javaFieldId}" value="${"$"}{${className}.${c.javaFieldId}}" labelName="${c.javaFieldName}" labelValue="${"$"}{${className}.${c.javaFieldName}}"
+							title="部门" url="/sys/office/treeData?type=2" cssClass="<#if c.isNull != "1">required</#if>" allowClear="true" notAllowSelectParent="true"/>
+					<#elseif c.showType == "areaselect">
+						<sys:treeselect id="${c.simpleJavaField}" name="${c.javaFieldId}" value="${"$"}{${className}.${c.javaFieldId}}" labelName="${c.javaFieldName}" labelValue="${"$"}{${className}.${c.javaFieldName}}"
+							title="区域" url="/sys/area/treeData" cssClass="<#if c.isNull != "1">required</#if>" allowClear="true" notAllowSelectParent="true"/>
+					<#elseif c.showType == "fileselect">
+						<form:hidden id="${c.simpleJavaField}" path="${c.javaFieldId}" htmlEscape="false"<#if c.dataLength != "0"> maxlength="${c.dataLength}"</#if> class="input-xlarge"/>
+						<sys:ckfinder input="${c.simpleJavaField}" type="files" uploadPath="/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${className}" selectMultiple="true"/>
+					</#if>
+					</div>
+				</div>
+					</#if>
+				</#list>
+
+				<div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-offset-3 col-sm-8">
+                        	<shiro:hasPermission name="${permissionPrefix}:edit">
+                        		<button id="btnSubmit" type="submit" class="btn green">
+                                    <i class="icon-check"></i> 保存
+                                </button>
+                            </shiro:hasPermission>
+
+                            <button id="btnCancel" type="button" class="btn default" onclick="history.go(-1)">
+                                <i class="icon-close"></i> 取消
+                            </button>
+                        </div>
+                    </div>
+                </div>
+			</div>
+		</form:form>
+    </div>
+</div>
+<script>
+ $(function () {
+        var form1 = $('#inputForm');
+        var error1 = $('.alert-danger', form1);
+        var success1 = $('.alert-success', form1);
+
+        form1.validate({
+            errorElement: 'span', //默认显示错误的容器
+            errorClass: 'help-block help-block-error', // 默认显示错误的样式
+            focusInvalid: false, // 不自动跳转到最后一个验证未通过的类
+            ignore: "",  // 验证所有表单内容，包含隐藏域
+            messages: {
+
+            },
+            rules: {
+
+            },
+
+            invalidHandler: function (event, validator) {
+                //显示错误信息
+                success1.hide();
+                error1.show();
+            },
+
+            highlight: function (element) {
+                // 高亮显示错误控件
+                $(element)
+                        .closest('.form-group').addClass('has-error');
+            },
+
+            unhighlight: function (element) {
+                // 正确后取消高亮
+                $(element)
+                        .closest('.form-group').removeClass('has-error');
+            },
+
+            success: function (label) {
+                label
+                        .closest('.form-group').removeClass('has-error');
+            },
+
+            submitHandler: function (form) {
+                success1.show();
+                error1.hide();
+                form.submit();
+            }
+        });
+    });
+
+</script>
+</body>
+</html>]]>
+	</content>
+</template>
